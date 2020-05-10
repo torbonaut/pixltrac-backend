@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  description String?
+  icon        String?
+  id          Int     @default(autoincrement()) @id
+  importance  Int
+  title       String
+  user_id     Int
+  user        User    @relation(fields: [user_id], references: [id])
+  entry       Entry[]
+
+  @@index([user_id], name: "user_id")
+  @@map("category")
+}
+
+model Entry {
+  category_id Int
+  date        DateTime
+  id          Int      @default(autoincrement()) @id
+  notes       String?
+  user_id     Int
+  value       Int
+  last_update   DateTime @updatedAt
+  category    Category @relation(fields: [category_id], references: [id])
+  user        User     @relation(fields: [user_id], references: [id])
+
+  @@index([category_id], name: "category_id")
+  @@index([user_id], name: "user_id")
+  @@map("entry")
+}
+
+model User {
+  created    DateTime
+  email      String
+  id         Int        @default(autoincrement()) @id
+  last_login DateTime?   @updatedAt
+  password   String
+  settings   Json?
+  username   String
+  categories   Category[]
+  entries      Entry[]
+  @@map("user")
+}

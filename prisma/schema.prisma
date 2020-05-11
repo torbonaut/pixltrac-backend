@@ -14,38 +14,35 @@ model Category {
   importance  Int
   title       String
   user_id     Int
-  user        User    @relation(fields: [user_id], references: [id])
-  entry       Entry[]
+  User        User    @relation(fields: [user_id], references: [id])
+  Entry       Entry[]
 
   @@index([user_id], name: "user_id")
-  @@map("category")
 }
 
 model Entry {
   category_id Int
   date        DateTime
-  id          Int      @default(autoincrement()) @id
+  id          Int       @default(autoincrement()) @id
+  last_update DateTime? @default(now())
   notes       String?
   user_id     Int
   value       Int
-  last_update   DateTime @updatedAt
-  category    Category @relation(fields: [category_id], references: [id])
-  user        User     @relation(fields: [user_id], references: [id])
+  Category    Category  @relation(fields: [category_id], references: [id])
+  User        User      @relation(fields: [user_id], references: [id])
 
   @@index([category_id], name: "category_id")
   @@index([user_id], name: "user_id")
-  @@map("entry")
 }
 
 model User {
-  created    DateTime
+  created    DateTime   @default(now())
   email      String
   id         Int        @default(autoincrement()) @id
-  last_login DateTime?   @updatedAt
+  last_login DateTime?  @default(now())
   password   String
   settings   Json?
   username   String
-  categories   Category[]
-  entries      Entry[]
-  @@map("user")
+  Category   Category[]
+  Entry      Entry[]
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Entry } from '@prisma/client';
 
 @Injectable()
 export class AppService {
@@ -7,8 +7,9 @@ export class AppService {
 
     const prisma = new PrismaClient();
 
-    const users = await prisma.entry.findMany();
+    const entries: Entry[] = await prisma.entry.findMany();
 
-    return users.toString();
+    return entries.map( (e: Entry) => (e.date.toDateString() + ': ' + e.value.toString())).join(', ');
+
   }
 }

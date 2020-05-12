@@ -37,12 +37,12 @@ model Entry {
 
 model User {
   created    DateTime   @default(now())
-  email      String
+  email      String     @unique
   id         Int        @default(autoincrement()) @id
-  last_login DateTime?  @default(now())
+  last_login DateTime?  @updatedAt
   password   String
-  settings   Json?
-  username   String
+  settings   String?
+  username   String     @unique
   Category   Category[]
   Entry      Entry[]
 }

@@ -1,6 +1,17 @@
-import {Body, Controller, Get, HttpException, HttpStatus, Post, UsePipes, ValidationPipe} from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Get,
+    HttpException,
+    HttpStatus,
+    Post,
+    UseGuards,
+    UsePipes,
+    ValidationPipe
+} from '@nestjs/common';
 import {UsersService} from "./users.service";
 import {CreateUserDto} from "./create-user.dto";
+import {JwtAuthGuard} from "../auth/guards/jwt.auth-guard";
 
 const bcrypt = require('bcrypt');
 
@@ -10,9 +21,9 @@ export class UsersController {
         private usersService: UsersService
     ) {}
 
-    @Post('/register')
+    @Post('/signup')
     @UsePipes(new ValidationPipe())
-    async register(@Body() createUserDto: CreateUserDto) {
+    async signup(@Body() createUserDto: CreateUserDto) {
         const usernameExists = await this.usersService.findOne({username: createUserDto.username });
         const emailExists = await this.usersService.findOne({ email: createUserDto.email});
 
@@ -34,5 +45,10 @@ export class UsersController {
         });
     }
 
+    @UseGuards(JwtAuthGuard)
+    @Get('test')
+    test() {
+        return 'yolo';
+    }
 
 }

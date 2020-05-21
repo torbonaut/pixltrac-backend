@@ -8,8 +8,6 @@ import {
     UserUpdateInput
 } from '@prisma/client';
 
-const bcrypt = require('bcrypt');
-
 @Injectable()
 export class UsersService {
     prisma: PrismaClient;
